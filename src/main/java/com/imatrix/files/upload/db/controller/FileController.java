@@ -78,11 +78,17 @@ public class FileController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getFileName() + "\"")
 				.body(fileDB.getFile());
 	}
+	@GetMapping("/getFilesById")
+	public ResponseEntity<byte[]> getFilesById(@RequestParam("id") Long id) {
+		FileDB fileDB = storageService.getFileById(id);
 
-	@GetMapping("/delFiles")
-	public ResponseEntity<String> delFiles(@RequestParam("orderNo") String orderNo,
-			@RequestParam("comGuid") String comGuid) {
-		int i = storageService.delFileByOrderGuid(orderNo, comGuid);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getFileName() + "\"")
+				.body(fileDB.getFile());
+	}
+	@GetMapping("/delFileById")
+	public ResponseEntity<String> delFiles(@RequestParam("id") Long id) {
+		int i = storageService.delFileByOrderGuid(id);
 		if (i > 0)
 			return ResponseEntity.status(HttpStatus.OK).body("File Deleted");
 		else

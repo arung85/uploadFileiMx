@@ -37,6 +37,9 @@ public class FileStorageService {
 		return fileDBRepository.save(FileDB);
 	}
 
+	public FileDB getFileById(Long id) {
+		return fileDBRepository.getFileById(id);
+	}
 	public FileDB getFile(String id) {
 		return fileDBRepository.findById(id).get();
 	}
@@ -45,8 +48,8 @@ public class FileStorageService {
 		return fileDBRepository.getFileByOrderGuid(order_no, com_guid);
 	}
 
-	public int delFileByOrderGuid(String order_no, String com_guid) {
-		return fileDBRepository.delFileByOrderGuid(order_no, com_guid);
+	public int delFileByOrderGuid(Long id) {
+		return fileDBRepository.delFileByOrderGuid(id);
 	}
 
 	public Stream<FileDB> getAllFiles() {
