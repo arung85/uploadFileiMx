@@ -13,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -32,36 +34,23 @@ public class FileController {
 
 	@Autowired
 	private FileStorageService storageService;
+
 	@PostMapping("/upload")
-	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("Referance") String Referance,
-			@RequestParam("PartyName") String PartyName, @RequestParam("FileDescription") String FileDescription,
-			@RequestParam("VoucherType") String VoucherType, @RequestParam("OrderNo") String OrderNo,
-			@RequestParam("VoucherNo") String VoucherNo, @RequestParam("comGuid") String comGuid,
-			@RequestParam("guid") String guid, @RequestParam("filePath") String filePath) {
+	public ResponseEntity<ResponseMessage> uploadFile(@RequestBody FileDTO fileData) {
 		String message = "";
 		try {
-			FileDTO fileDTO = new FileDTO();
-			fileDTO.setReferance(Referance);
-			fileDTO.setPartyName(PartyName);
-			fileDTO.setFileDescription(FileDescription);
-			fileDTO.setVoucherType(VoucherType);
-			fileDTO.setOrderNo(OrderNo);
-			fileDTO.setVoucherNo(VoucherNo);
-			fileDTO.setComGuid(comGuid);
-			fileDTO.setGuid(guid);
+			storageService.store(convertFiletoMultiPart(fileData.getFilePath()), fileData);
 
-			storageService.store(convertFiletoMultiPart(filePath), fileDTO);
-
-			message = "Uploaded the file successfully: " + filePath;
+			message = "Uploaded the file successfully: " + fileData.getFilePath();
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 		} catch (Exception e) {
-			message = "Could not upload the file: " + filePath + "!";
+			message = "Could not upload the file: " + fileData.getFilePath() + "!";
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 		}
 	}
 
-	@GetMapping("/files")
-	public ResponseEntity<List<ResponseFile>> getListFiles() {
+	@GetMapping("/getAllFiles")
+	public ResponseEntity<List<ResponseFile>> getAllFiles() {
 		List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
 			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/files/")
 					.path(dbFile.getID() + "").toUriString();
@@ -72,19 +61,11 @@ public class FileController {
 		return ResponseEntity.status(HttpStatus.OK).body(files);
 	}
 
-	@GetMapping("/getFiles")
-	public ResponseEntity<byte[]> getFiles(@RequestParam("orderNo") String orderNo,
-			@RequestParam("comGuid") String comGuid) {
-		FileDB fileDB = storageService.getFileByOrderGuid(orderNo, comGuid);
-
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getFileName() + "\"")
-				.body(fileDB.getFile());
-	}
-
-	@GetMapping("/getFilesById")
-	public ResponseEntity<byte[]> getFilesById(@RequestParam("id") Long id) {
-		FileDB fileDB = storageService.getFileById(id);
+	@GetMapping("/getFileById")
+	public ResponseEntity<byte[]> getFileById(@RequestBody FileDTO fileData) {
+		if (ObjectUtils.isEmpty(fileData.getId()) || fileData.getId() < 0)
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "Id can't be empty").body(null);
+		FileDB fileDB = storageService.getFileById(fileData.getId());
 
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getFileName() + "\"")
@@ -92,8 +73,10 @@ public class FileController {
 	}
 
 	@GetMapping("/delFileById")
-	public ResponseEntity<String> delFiles(@RequestParam("id") Long id) {
-		int i = storageService.delFileByOrderGuid(id);
+	public ResponseEntity<String> delFiles(@RequestBody FileDTO fileData) {
+		if (ObjectUtils.isEmpty(fileData.getId()) || fileData.getId() < 0)
+			return ResponseEntity.status(HttpStatus.OK).body("Id can't be empty");
+		int i = storageService.delFileByOrderGuid(fileData.getId());
 		if (i > 0)
 			return ResponseEntity.status(HttpStatus.OK).body("File Deleted");
 		else

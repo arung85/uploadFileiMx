@@ -20,6 +20,6 @@ public interface FileDBRepository extends JpaRepository<FileDB, String> {
 	
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE tblfile set active_status=0 where id=:id", nativeQuery = true)
+	@Query(value = "UPDATE tblfile set active_status=0, updated_dt=CURRENT_TIMESTAMP() where id=:id", nativeQuery = true)
 	int delFileByOrderGuid(@Param("id") Long id);
 }

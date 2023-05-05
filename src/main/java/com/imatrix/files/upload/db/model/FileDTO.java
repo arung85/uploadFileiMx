@@ -17,6 +17,8 @@ public class FileDTO {
 	private int activeStatus;
 	private Date updatedDt;
 	private String Type;
+	private String filePath;
+	private Long id;
 	
 	public FileDTO() {
 		super();
@@ -99,6 +101,19 @@ public class FileDTO {
 	}
 	public void setType(String type) {
 		Type = type;
+	}
+	
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public FileDTO(String referance, String partyName, String fileDescription, String fileName, String docType,
 			String voucherType, String orderNo, String voucherNo, String comGuid, String guid, int activeStatus,
