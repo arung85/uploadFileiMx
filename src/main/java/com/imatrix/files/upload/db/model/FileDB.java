@@ -1,6 +1,7 @@
 package com.imatrix.files.upload.db.model;
 
-import java.sql.Date;
+
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,11 +45,11 @@ public class FileDB {
 	@Column(length=145)
 	private String guid;
 	@CreationTimestamp
-	private Date createdDt;
+	private Timestamp createdDt;
 	@Column(length=1)	
 	private int activeStatus;
 	@UpdateTimestamp
-	private Date updatedDt;
+	private Timestamp updatedDt;
 	public FileDB() {
 	}
 
@@ -167,14 +168,6 @@ public class FileDB {
 		this.guid = guid;
 	}
 
-	public Date getCreatedDt() {
-		return createdDt;
-	}
-
-	public void setCreatedDt(Date createdDt) {
-		this.createdDt = createdDt;
-	}
-
 	public int getActiveStatus() {
 		return activeStatus;
 	}
@@ -182,15 +175,6 @@ public class FileDB {
 	public void setActiveStatus(int activeStatus) {
 		this.activeStatus = activeStatus;
 	}
-
-	public Date getUpdatedDt() {
-		return updatedDt;
-	}
-
-	public void setUpdatedDt(Date updatedDt) {
-		this.updatedDt = updatedDt;
-	}
-
 	public String getType() {
 		return Type;
 	}
@@ -198,6 +182,23 @@ public class FileDB {
 	public void setType(String type) {
 		Type = type;
 	}
+
+	public Timestamp getCreatedDt() {
+		return createdDt;
+	}
+
+	public void setCreatedDt(Timestamp createdDt) {
+		this.createdDt = createdDt;
+	}
+
+	public Timestamp getUpdatedDt() {
+		return updatedDt;
+	}
+
+	public void setUpdatedDt(Timestamp updatedDt) {
+		this.updatedDt = updatedDt;
+	}
+	
 
 
 }
