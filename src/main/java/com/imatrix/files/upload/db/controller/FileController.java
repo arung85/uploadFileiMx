@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +32,8 @@ import com.imatrix.files.upload.db.service.FileStorageService;
 @Controller
 @CrossOrigin("http://localhost:8081")
 public class FileController {
+
+	private static final Logger logger = LogManager.getLogger(FileController.class);
 
 	@Autowired
 	private FileStorageService storageService;
@@ -100,16 +103,17 @@ public class FileController {
 			File file = new File(FILE_PATH);
 
 			if (file.exists()) {
-				System.out.println("File Exist => " + file.getName() + " :: " + file.getAbsolutePath());
+
+				logger.info("File Exist => " + file.getName() + " :: " + file.getAbsolutePath());
 			}
 			FileInputStream input = new FileInputStream(file);
 			multipartFile = new MockMultipartFile("file", file.getName(),
 					file.toURI().toURL().openConnection().getContentType(), IOUtils.toByteArray(input));
-			System.out.println("multipartFile => " + multipartFile.isEmpty() + " :: "
-					+ multipartFile.getOriginalFilename() + " :: " + multipartFile.getName() + " :: "
-					+ multipartFile.getSize() + " :: " + multipartFile.getBytes());
+			logger.info("multipartFile => " + multipartFile.isEmpty() + " :: " + multipartFile.getOriginalFilename()
+					+ " :: " + multipartFile.getName() + " :: " + multipartFile.getSize() + " :: "
+					+ multipartFile.getBytes());
 		} catch (IOException e) {
-			System.out.println("Exception => " + e.getLocalizedMessage());
+			logger.info("Exception => " + e.getLocalizedMessage());
 		}
 		return multipartFile;
 	}
