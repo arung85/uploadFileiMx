@@ -1,5 +1,6 @@
 package com.imatrix.files.upload.db.model;
 
+import java.io.File;
 import java.sql.Date;
 
 public class FileDTO {
@@ -19,6 +20,7 @@ public class FileDTO {
 	private String Type;
 	private String filePath;
 	private Long id;
+	private File file;
 	
 	public FileDTO() {
 		super();
@@ -115,23 +117,12 @@ public class FileDTO {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public FileDTO(String referance, String partyName, String fileDescription, String fileName, String docType,
-			String voucherType, String orderNo, String voucherNo, String comGuid, String guid, int activeStatus,
-			Date updatedDt, String type) {
-		super();
-		Referance = referance;
-		PartyName = partyName;
-		FileDescription = fileDescription;
-		FileName = fileName;
-		DocType = docType;
-		VoucherType = voucherType;
-		OrderNo = orderNo;
-		VoucherNo = voucherNo;
-		this.comGuid = comGuid;
-		this.guid = guid;
-		this.activeStatus = activeStatus;
-		this.updatedDt = updatedDt;
-		Type = type;
+	
+	public File getFile() {
+		return file;
+	}
+	public void setFile(File file) {
+		this.file = file;
 	}
 	@Override
 	public String toString() {

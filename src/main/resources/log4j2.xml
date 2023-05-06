@@ -6,8 +6,8 @@
 				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 		<RollingFile name="LogToRollingFile"
-			fileName="/var/log/imFileUploadApp/uploadApp.log"
-			filePattern="/var/log/imFileUploadApp/$${date:yyyy-MM}/uploadApp-%d{MM-dd-yyyy}-%i.log.gz">
+			fileName="/var/log/imatrix/imFileUploadApp/uploadApp.log"
+			filePattern="/var/log/imatrix/imFileUploadApp/$${date:yyyy-MM}/uploadApp-%d{MM-dd-yyyy}-%i.log.gz">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>

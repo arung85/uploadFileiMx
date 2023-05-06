@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -42,12 +43,39 @@ public class FileController {
 	public ResponseEntity<ResponseMessage> uploadFile(@RequestBody FileDTO fileData) {
 		String message = "";
 		try {
-			storageService.store(convertFiletoMultiPart(fileData.getFilePath()), fileData);
+			storageService.store(convertFiletoMultiPartByPath(fileData.getFilePath()), fileData);
 
 			message = "Uploaded the file successfully: " + fileData.getFilePath();
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 		} catch (Exception e) {
 			message = "Could not upload the file: " + fileData.getFilePath() + "!";
+			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+		}
+	}
+
+	@PostMapping("/uploadFileParam")
+	public ResponseEntity<ResponseMessage> uploadFileParam(@RequestParam("reference") String reference,
+			@RequestParam("partyName") String partyName, @RequestParam("fileDescription") String fileDescription, 
+			@RequestParam("voucherType") String voucherType,@RequestParam("orderNo") String orderNo,
+			@RequestParam("voucherNo") String voucherNo, @RequestParam("comGuid") String comGuid,
+			@RequestParam("guid") String guid, @RequestParam("file") MultipartFile file) {
+		String message = "";
+		try {
+
+			FileDTO fileDTO = new FileDTO();
+			fileDTO.setReferance(reference);
+			fileDTO.setPartyName(partyName);
+			fileDTO.setFileDescription(fileDescription);
+			fileDTO.setVoucherType(voucherType);
+			fileDTO.setOrderNo(orderNo);
+			fileDTO.setVoucherNo(voucherNo);
+			fileDTO.setComGuid(comGuid);
+			fileDTO.setGuid(guid);
+			storageService.store(file, fileDTO);
+			message = "Uploaded the file successfully: " + file.getName();
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+		} catch (Exception e) {
+			message = "Could not upload the file: " + file.getName() + "!";
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
 		}
 	}
@@ -97,7 +125,7 @@ public class FileController {
 
 	}
 
-	private MultipartFile convertFiletoMultiPart(String FILE_PATH) {
+	private MultipartFile convertFiletoMultiPartByPath(String FILE_PATH) {
 		MultipartFile multipartFile = null;
 		try {
 			File file = new File(FILE_PATH);
@@ -117,4 +145,5 @@ public class FileController {
 		}
 		return multipartFile;
 	}
+
 }
