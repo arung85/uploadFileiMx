@@ -13,6 +13,7 @@ import java.util.Properties;
 
 public class IMatrixRestApiCaller {
 	public static void main(String[] args) throws IOException {
+
 		if (args[0].equals("UPLOAD_FILE")) {
 			System.out.println("Calling " + args[0] + " method.");
 			UPLOAD_FILE(args);
@@ -25,7 +26,7 @@ public class IMatrixRestApiCaller {
 	}
 
 	public static String UPLOAD_FILE(String[] args) throws IOException {
-		System.out.println("inside : UPLOAD_FILE method: " + args);
+		System.out.println("inside : UPLOAD_FILE method: "+args);
 		String retunStr = null;
 		Properties prop = new Properties();
 		try {
@@ -34,7 +35,7 @@ public class IMatrixRestApiCaller {
 					IMatrixRestApiCaller.class.getClassLoader().getResourceAsStream("IMatrixRestApiCaller.properties"));
 
 			// get the property value and print it out
-			System.out.println("URL from PROP File " + prop.getProperty("url"));
+			System.out.println("URL from PROP File "+prop.getProperty("url"));
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -46,8 +47,8 @@ public class IMatrixRestApiCaller {
 		String url = "http://" + args[1] + "/uploadFileParam";
 		File file = new File(args[10]);
 
-		System.out.println("URL from string arg " + url);
-
+		System.out.println("URL from string arg "+url);
+		
 		// Create connection
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
